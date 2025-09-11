@@ -23,7 +23,7 @@ A lightweight Python-based toolkit to extract features from PCAP files, train ML
 ---
 
 ## Installation
-git clone https://github.com/your-username/cicflowmeter-clone.git
+git clone https://github.com/diyapratheep/cicflowmeter-clone.git
 cd cicflowmeter-clone
 pip install -r requirements.txt
 
@@ -42,15 +42,23 @@ python cluster_flows.py input.csv
 ---
 
 ## Example Workflow
-1. Start with a PCAP: `sample.pcap`.  
-2. Convert to CSV:  
+
+```bash
+# 1. Start with a PCAP file
+# (for example: sample.pcap)
+
+# 2. Convert the PCAP to CSV
 python pcap2csv_win.py sample.pcap sample.csv
-3. Train a model:  
+
+# 3. Train a Random Forest model from pseudolabels
 python train_from_pseudolabels_quick.py pseudolabels.csv
-4. Predict on new data:  
+
+# 4. Predict on new data using the trained model
 python predict_on_csv.py sample.csv flow_video_rf.joblib results.csv
-5. Cluster flows:  
+
+# 5. Cluster flows and flag the video-like cluster
 python cluster_flows.py sample.csv
+```
 
 ---
 
