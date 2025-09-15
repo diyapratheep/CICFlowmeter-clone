@@ -4,11 +4,12 @@ import pandas as pd
 import numpy as np
 import joblib
 import subprocess
+import sys
 
 # ---------------- Paths ----------------
 BASE_DIR = os.path.dirname(__file__)
 MODEL_DIR = os.path.join(BASE_DIR, "..", "models")
-DATA_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "data"))
+
 # ---------------- Column Mapping ----------------
 COLUMN_MAPPING = {
     'FlowDuration': 'duration',
@@ -47,40 +48,66 @@ MODEL = joblib.load(os.path.join(MODEL_DIR, "xgboost_model_new.pkl"))
 # ---------------- Helper Functions ----------------
 def extract_flows_from_pcap(pcap_path, output_csv="gmflows.csv"):
     """Call the pcap2csv script to convert PCAP → CSV"""
-    # Use DATA_DIR for both input and output
-    pcap_full = os.path.join(DATA_DIR, os.path.basename(pcap_path))
-    output_csv_full = os.path.join(DATA_DIR, output_csv)
-    if not os.path.samefile(pcap_path, pcap_full):
-        # Copy pcap to data dir if not already there
-        import shutil
-        shutil.copy2(pcap_path, pcap_full)
-    subprocess.run(
-        ["python", "pcap2csv_win_new.py", "-i", pcap_full, "-o", output_csv_full],
-        check=True,
-        cwd=os.path.dirname(__file__)
-    )
-    return output_csv_full
+    try:
+        subprocess.run(
+            [sys.executable, "pcap2csv_win_new.py", "-i", pcap_path, "-o", output_csv],
+            check=True,
+            cwd=os.path.dirname(__file__)
+        )
+    except subprocess.CalledProcessError as e:
+        print(f"[!] Error running pcap2csv: {e}", file=sys.stderr)
+        return None
+    return output_csv if os.path.exists(output_csv) else None
+
 
 def classify_flows(csv_path, last_n_seconds=None):
-    """Load CSV → preprocess → predict → return dataframe with predictions"""
-    # Use DATA_DIR for csv_path if not already absolute
-    if not os.path.isabs(csv_path):
-        csv_path = os.path.join(DATA_DIR, csv_path)
-    if not os.path.exists(csv_path):
-        return pd.DataFrame()
-    
-    # Filter by last N seconds (optional)
-    if last_n_seconds is not None and "FlowDuration" in df.columns:
-        max_dur = df["FlowDuration"].max()
-        df = df[df["FlowDuration"] >= max_dur - last_n_seconds]
-    
-    df = df.rename(columns=COLUMN_MAPPING)
-    df = df[MODEL_FEATURES]
-    df.replace([np.inf, -np.inf], np.nan, inplace=True)
-    df.fillna(0, inplace=True)
-    
-    X_scaled = SCALER.transform(df)
-    y_pred = MODEL.predict(X_scaled)
-    df["Prediction"] = [LABEL_MAP.get(p, p) for p in y_pred]
-    
+    import traceback
+    import pandas as pd
+    import numpy as np
+    import os
+
+    df = pd.DataFrame()  # define outside try-except
+    try:
+        if not os.path.exists(csv_path):
+            print(f"[!] CSV not found: {csv_path}", file=sys.stderr)
+            return df
+
+        df_read = pd.read_csv(csv_path)  # read into a separate var
+        if df_read.empty:
+            print("[!] CSV is empty", file=sys.stderr)
+            return df
+
+        df = df_read.copy()  # assign to df after successful read
+
+        # Optional filtering
+        if last_n_seconds is not None and "FlowDuration" in df.columns:
+            max_dur = df["FlowDuration"].max()
+            df = df[df["FlowDuration"] >= max_dur - last_n_seconds]
+
+        # Rename columns safely
+        df = df.rename(columns={k: v for k, v in COLUMN_MAPPING.items() if k in df.columns})
+
+        # Ensure all model features exist
+        for col in MODEL_FEATURES:
+            if col not in df.columns:
+                df[col] = 0
+
+        df = df[MODEL_FEATURES]
+        df.replace([np.inf, -np.inf], np.nan, inplace=True)
+        df.fillna(0, inplace=True)
+
+        # Prediction
+        X_scaled = SCALER.transform(df)
+        y_pred = MODEL.predict(X_scaled)
+        df["Prediction"] = [LABEL_MAP.get(p, p) for p in y_pred]
+
+    except Exception as e:
+        print("[!] Exception in classify_flows:", e, file=sys.stderr)
+        print(traceback.format_exc(), file=sys.stderr)
+
     return df
+
+
+
+
+
