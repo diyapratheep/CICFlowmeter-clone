@@ -12,8 +12,8 @@ st.write("Upload a PCAP file or run in live mode to classify network flows.")
 mode = st.radio("Choose mode:", ["Upload PCAP", "Live Capture"])
 
 # Load model + scaler once
-scaler = joblib.load(r"scaler_new_xgb.pkl")
-model = joblib.load(r"xgboost_model_new.pkl")
+scaler = joblib.load(r"models\scaler_new_xgb.pkl")
+model = joblib.load(r"models\xgboost_model_new.pkl")
 label_map = {0: "Web", 1: "Multimedia", 2: "Social Media", 3: "Malicious"}
 
 column_mapping = {
@@ -92,7 +92,7 @@ elif mode == "Live Capture":
     # Only one button (Start)
     if st.button("Start Live Capture") and st.session_state.live_process is None:
         st.session_state.live_process = subprocess.Popen(
-            ["python", "pcap2csv_win_new.py", "--live", "-o", output_file, "--iface", iface]
+            ["python", "pcap2csv_win.py", "--live", "-o", output_file, "--iface", iface]
         )
         st.success("✅ Live capture started")
 
