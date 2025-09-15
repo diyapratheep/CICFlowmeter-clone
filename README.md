@@ -1,7 +1,7 @@
-```markdown
+```
 # AI POWERED Traffic Analyzer
-
-**Professional Summary**  
+```
+### Summary 
 This project provides a complete solution for **network traffic analysis** using PCAP files. Users can upload packet capture files (`.pcap` / `.pcapng`) or perform live capture, and the system classifies network flows into categories like Web, Multimedia, Social Media, or Malicious using a Python-based XGBoost model. The platform includes a **React frontend** for interactive visualization and a **Node.js/Express backend** for file handling, analysis, and WebSocket-based live updates.
 
 ---
@@ -15,44 +15,8 @@ This project provides a complete solution for **network traffic analysis** using
 - WebSocket support for live capture updates.
 
 ---
-
-## Project Structure
-
 ```
-
-project-root/
-│
-├── backend/
-│   ├── worker/
-│   │   ├── classifier\_core.py
-│   │   └── pcap2csv\_win\_new\.py
-│   ├── services/
-│   │   └── pythonClient.js
-│   ├── routes/
-│   │   ├── sessions.js
-│   │   └── flows.js
-│   ├── uploads/         # generated at runtime
-│   ├── app.js
-│   └── package.json
-│
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── services/
-│   │   │   └── api.ts
-│   │   ├── pages/
-│   │   │   └── Upload.tsx
-│   │   └── App.tsx
-│   ├── public/
-│   └── package.json
-│
-├── README.md
-└── .gitignore
-
-````
-
----
-
+```
 ## Installation & Setup
 
 ### Backend
@@ -115,4 +79,4 @@ npm run dev
 This project is open-source. But only contributors allowed are my teammates✋
 
 ```
-```
+
