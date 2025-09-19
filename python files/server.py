@@ -12,7 +12,7 @@
 # app = FastAPI()
 
 # # ---------- MongoDB Atlas Async Setup ----------
-# MONGO_URI = os.getenv("MONGO_URI","mongodb+srv://diyapratheep584_db_user:RIAhCkcEvnBffMx6@flow-classifier-cluster.t6ihblz.mongodb.net/")
+# MONGO_URI = os.getenv("MONGO_URI")
 # client = AsyncIOMotorClient(MONGO_URI)
 # db = client.flowdb
 # collection = db.flows
@@ -116,8 +116,7 @@ app = FastAPI()
 
 # ---------- MongoDB Atlas Async Setup ----------
 MONGO_URI = os.getenv(
-    "MONGO_URI",
-    "mongodb+srv://diyapratheep584_db_user:RIAhCkcEvnBffMx6@flow-classifier-cluster.t6ihblz.mongodb.net/"
+    "MONGO_URI"
 )
 client = AsyncIOMotorClient(MONGO_URI)
 db = client.flowdb
