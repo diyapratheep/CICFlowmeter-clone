@@ -111,6 +111,8 @@ import pandas as pd
 import numpy as np
 import joblib
 import os
+from load_dotenv import load_dotenv
+load_dotenv()
 
 app = FastAPI()
 
