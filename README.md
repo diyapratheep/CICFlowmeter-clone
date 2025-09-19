@@ -1,68 +1,79 @@
-# CICFlowMeter Clone
 
-A lightweight Python-based toolkit to extract features from PCAP files, train ML models, and detect video-like network flows. Inspired by CICFlowMeter, this clone focuses on converting packet captures into feature-rich CSVs, applying machine learning, and clustering flows.
+# AI POWERED Traffic Analyzer
+
+### Summary 
+This project provides a complete solution for **network traffic analysis** using PCAP files. Users can upload packet capture files (`.pcap` / `.pcapng`) or perform live capture, and the system classifies network flows into categories like Web, Multimedia, Social Media, or Malicious using a Python-based XGBoost model. The platform includes a **React frontend** for interactive visualization and a **Node.js/Express backend** for file handling, analysis, and WebSocket-based live updates.
 
 ---
 
 ## Features
-- Convert raw PCAP files into flow-based CSV feature datasets.  
-- Train ML models (Random Forest) using pseudolabels.  
-- Predict video-like flows on new datasets.  
-- Cluster flows and flag the cluster with the highest throughput as "video-like".  
+- Upload `.pcap` or `.pcapng` files for automated flow extraction and classification.
+- Live network capture and real-time classification.
+- Traffic classification into Web, Multimedia, Social Media, and Malicious categories.
+- Flow statistics and top-10 flow details visualization.
+- Interactive charts for traffic distribution.
+- WebSocket support for live capture updates.
 
 ---
+## Installation & Setup
 
-## Project Structure
-| File | Description |
-|------|-------------|
-| `pcap2csv_win.py` | Converts PCAP files into a features CSV. |
-| `train_from_pseudolabels_quick.py` | Trains a Random Forest model from pseudolabels and saves it as `flow_video_rf.joblib`. |
-| `predict_on_csv.py` | Runs predictions on a features CSV using the trained model. |
-| `cluster_flows.py` | Clusters flows and flags the cluster with the highest throughput as video-like. |
+### Backend
+```bash
+cd backend
+npm install
+````
 
----
-
-## Installation
-git clone https://github.com/diyapratheep/cicflowmeter-clone.git
-cd cicflowmeter-clone
-pip install -r requirements.txt
-
----
-## Usage
-
-### 1. Convert PCAP to CSV
-python pcap2csv_win.py input.pcap output.csv
-### 2. Train Model
-python train_from_pseudolabels_quick.py pseudolabels.csv
-### 3. Run Predictions
-python predict_on_csv.py input.csv flow_video_rf.joblib predictions.csv
-### 4. Cluster Flows
-python cluster_flows.py input.csv
-
----
-
-## Example Workflow
+### Frontend
 
 ```bash
-# 1. Start with a PCAP file
-# (for example: sample.pcap)
-
-# 2. Convert the PCAP to CSV
-python pcap2csv_win.py sample.pcap sample.csv
-
-# 3. Train a Random Forest model from pseudolabels
-python train_from_pseudolabels_quick.py pseudolabels.csv
-
-# 4. Predict on new data using the trained model
-python predict_on_csv.py sample.csv flow_video_rf.joblib results.csv
-
-# 5. Cluster flows and flag the video-like cluster
-python cluster_flows.py sample.csv
+cd frontend
+npm install
 ```
 
 ---
 
+## Running the Application
+
+### Start Backend
+
+```bash
+cd backend
+npm run dev
+```
+
+### Start Frontend
+
+```bash
+cd frontend
+npm run dev
+```
+
+* Backend runs on `http://localhost:3001`
+* Frontend runs on `http://localhost:5173`
+
+---
+
 ## Notes
-- Requires Python 3.8+.  
-- PCAP parsing depends on scapy/pyshark (install via requirements).  
-- Outputs are CSVs for easy integration with ML workflows.
+
+* Ensure **Python 3** is installed and accessible (`py -3` on Windows, `python3` on macOS/Linux).
+* Required Python packages for flow analysis: `pandas`, `numpy`, `joblib`, `scikit-learn`, `xgboost`.
+* Uploaded files are stored in `backend/uploads/`.
+* Use `.pcap` or `.pcapng` files only. File size limit: 100MB.
+* Live capture requires proper network interface name (Windows: `Wi-Fi` / `Ethernet`).
+
+---
+
+## Update in Progress
+
+* Add **authentication and session management**.
+* Improve **real-time dashboard** for live capture flows.
+* Optimize **Python flow classification** for large PCAP files.
+* Add **frontend pagination and filtering** for flow table.
+
+---
+
+## License
+
+This project is open-source. But only contributors allowed are my teammates✋
+
+
