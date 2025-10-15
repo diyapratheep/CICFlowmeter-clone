@@ -64,6 +64,7 @@ The project is organized into the following Python scripts located in the `/pyth
 | `realtime_sniffer.py`| A client script that captures live traffic and sends it to the server for classification. |
 | `classify_ui.py` | A Streamlit web UI for uploading PCAP files or viewing live analysis. |
 | `pcap2csv_win.py` | A utility script to convert `.pcap` files to `.csv` format (for Windows). |
+| `pcap2csv_win_v2.py` | updated version of `pcap2csv_win.py` for viewing the urls visited. |
 | `input.pcap` | A sample Wireshark-captured PCAP file for testing the upload functionality. |
 
 
