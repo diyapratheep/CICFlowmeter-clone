@@ -9,7 +9,8 @@ import joblib
 import os
 from load_dotenv import load_dotenv
 load_dotenv()
-
+import joblib
+import os
 app = FastAPI()
 
 # ---------- MongoDB Atlas Async Setup ----------
@@ -17,12 +18,16 @@ MONGO_URI = os.getenv(
     "MONGO_URI"
 )
 client = AsyncIOMotorClient(MONGO_URI)
+
 db = client.flowdb
 collection = db.flows
-
+script_dir = os.path.dirname(__file__)
 # ---------- Load XGBoost Model and Scaler ----------
-scaler = joblib.load("scaler_new_xgb.pkl")
-model = joblib.load("xgboost_model_new.pkl")
+scaler_path = os.path.join(script_dir, "models", "scaler_new_xgb.pkl")
+model_path = os.path.join(script_dir, "models", "xgboost_model_new.pkl")
+
+scaler = joblib.load(scaler_path)
+model = joblib.load(model_path)
 label_map = {0: "Web", 1: "Multimedia", 2: "Social Media", 3: "Malicious"}
 
 column_mapping = {
