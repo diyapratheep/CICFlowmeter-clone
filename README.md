@@ -38,7 +38,6 @@ npm install
 
 ```bash
 cd backend
-npm install
 npm run dev
 ```
 
@@ -46,7 +45,6 @@ npm run dev
 
 ```bash
 cd frontend
-npm install
 npm run dev
 ```
 
