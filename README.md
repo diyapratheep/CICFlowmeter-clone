@@ -16,7 +16,9 @@ This project provides a complete solution for **network traffic analysis** using
 
 ---
 ## Installation & Setup
-
+```bash
+pip install -r requirements.txt
+````
 ### Backend
 ```bash
 cd backend
@@ -38,6 +40,8 @@ npm install
 
 ```bash
 cd backend
+pyhton -m venv venv
+venv\Scripts\activate
 npm run dev
 ```
 
