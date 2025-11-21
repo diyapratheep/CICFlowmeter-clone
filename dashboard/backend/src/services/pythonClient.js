@@ -159,13 +159,21 @@ class PythonClient {
     this.activeSessions = new Map();
 
 
-    //const venvPath = path.join(__dirname, '..', '..', '..', 'venv');
-    // Determine Python executable
+    const venvPath = path.join(__dirname, '..', '..', '..', 'venv');
     if (os.platform() === 'win32') {
-      this.pythonCmd = 'python'; // Windows Python launcher //was py
+      // Use the venv Python executable
+      this.pythonCmd = path.join(venvPath, 'Scripts', 'python.exe');
     } else {
-      this.pythonCmd = 'python3'; // macOS/Linux
+      this.pythonCmd = path.join(venvPath, 'bin', 'python3');
     }
+
+
+    // Determine Python executable
+    // if (os.platform() === 'win32') {
+    //   this.pythonCmd = 'python'; // Windows Python launcher //was py
+    // } else {
+    //   this.pythonCmd = 'python3'; // macOS/Linux
+    // }
   }
 
   spawnPython(args, cwd) {
