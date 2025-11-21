@@ -18,13 +18,13 @@ This project provides a complete solution for **network traffic analysis** using
 ## Installation & Setup
 ```bash
 pip install -r requirements.txt
+python -m venv venv
+venv\Scripts\activate
 ````
 ### Backend
 ```bash
 cd backend
 npm install
-python -m venv venv
-venv\Scripts\activate
 ````
 
 ### Frontend
