@@ -158,9 +158,11 @@ class PythonClient {
     this.dataPath = path.join(__dirname, '..', '..', '..', 'data'); 
     this.activeSessions = new Map();
 
+
+    //const venvPath = path.join(__dirname, '..', '..', '..', 'venv');
     // Determine Python executable
     if (os.platform() === 'win32') {
-      this.pythonCmd = 'py'; // Windows Python launcher
+      this.pythonCmd = 'python'; // Windows Python launcher //was py
     } else {
       this.pythonCmd = 'python3'; // macOS/Linux
     }
