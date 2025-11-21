@@ -23,6 +23,8 @@ pip install -r requirements.txt
 ```bash
 cd backend
 npm install
+python -m venv venv
+venv\Scripts\activate
 ````
 
 ### Frontend
@@ -40,8 +42,6 @@ npm install
 
 ```bash
 cd backend
-pyhton -m venv venv
-venv\Scripts\activate
 npm run dev
 ```
 
