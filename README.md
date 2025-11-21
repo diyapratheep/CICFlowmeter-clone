@@ -16,10 +16,11 @@ This project provides a complete solution for **network traffic analysis** using
 
 ---
 ## Installation & Setup
+In the root directory (dashboard folder)
 ```bash
-pip install -r requirements.txt
 python -m venv venv
 venv\Scripts\activate
+pip install -r requirements.txt
 ````
 ### Backend
 ```bash
