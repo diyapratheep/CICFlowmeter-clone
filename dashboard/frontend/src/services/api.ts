@@ -103,8 +103,8 @@ class ApiService {
   private wsCallbacks: Map<string, RealtimeCallback>;
 
   constructor() {
-    this.baseURL = 'http://localhost:3001/api';
-    this.wsUrl = 'ws://localhost:3001';
+    this.baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
+    this.wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:3001';
     this.ws = null;
     this.wsCallbacks = new Map();
   }
