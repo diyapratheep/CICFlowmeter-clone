@@ -4,7 +4,7 @@ const path = require('path');
 const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs-extra');
-const pythonClient = require('./services/pythonClient'); // <-- added
+const pythonClient = require('./services/pythonClient'); 
 
 // Import routes
 const sessionRoutes = require('./routes/sessions');
@@ -12,23 +12,39 @@ const flowRoutes = require('./routes/flows');
 
 const app = express();
 
+// =======================
+// Request logging middleware
+// =======================
+app.use((req, res, next) => {
+  console.log(`[HTTP] ${req.method} ${req.url}`);
+  next();
+});
+
+// =======================
 // Middleware
-app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000'],
-  credentials: true
-}));
+// =======================
+// app.use(cors({
+//   origin: ['http://localhost:5173', 'http://localhost:3000'],
+//   credentials: true
+// }));
 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Static file serving for uploads
+// Static file serving
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
+// // Serve React build (frontend)
+// const publicPath = path.join(__dirname, 'public'); // backend/public
+// console.log(`Serving React static files from: ${publicPath}`);
+// app.use(express.static(publicPath));
+
+// =======================
 // API Routes
+// =======================
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/flows', flowRoutes);
 
-// Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'OK',
@@ -37,7 +53,9 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// --- Multer storage setup ---
+// =======================
+// Multer storage setup
+// =======================
 const storage = multer.diskStorage({
   destination: async (req, file, cb) => {
     const uploadDir = path.join(__dirname, '..', 'uploads');
@@ -64,27 +82,25 @@ const upload = multer({
   }
 });
 
-// --- Upload & Analyze PCAP ---
+// =======================
+// Upload & analyze PCAP
+// =======================
 app.post('/api/upload', upload.single('pcap'), async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'No file uploaded' });
-    }
+    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
 
     const uploadId = uuidv4();
     const filePath = req.file.path;
 
-    // Call Python client to analyze PCAP
     const analysisResult = await pythonClient.analyzePcapFile(filePath, uploadId);
 
-    // Return upload info + analysis
     res.json({
       success: true,
       uploadId,
       filename: req.file.originalname,
       size: req.file.size,
       filePath,
-      analysis: analysisResult, // flows and stats from Python
+      analysis: analysisResult,
       message: 'File uploaded and analyzed successfully'
     });
 
@@ -94,21 +110,30 @@ app.post('/api/upload', upload.single('pcap'), async (req, res) => {
   }
 });
 
+// =======================
 // Error handling middleware
+// =======================
 app.use((error, req, res, next) => {
-  if (error instanceof multer.MulterError) {
-    if (error.code === 'LIMIT_FILE_SIZE') {
-      return res.status(400).json({ error: 'File too large. Maximum size is 100MB.' });
-    }
+  if (error instanceof multer.MulterError && error.code === 'LIMIT_FILE_SIZE') {
+    return res.status(400).json({ error: 'File too large. Maximum size is 100MB.' });
   }
-  
+
   console.error('Unhandled error:', error);
   res.status(500).json({ error: 'Internal server error', details: error.message });
 });
 
-// 404 handler
-app.use('*', (req, res) => {
-  res.status(404).json({ error: 'Endpoint not found' });
-});
+// // =======================
+// // Catch-all route for React SPA
+// // =======================
+// app.get('*', (req, res) => {
+//   const indexFile = path.join(publicPath, 'index.html');
+//   console.log(`Catch-all route hit for: ${req.url}`);
+//   res.sendFile(indexFile, (err) => {
+//     if (err) {
+//       console.error('Error serving React index.html:', err);
+//       res.status(500).send('Internal Server Error');
+//     }
+//   });
+// });
 
 module.exports = app;
