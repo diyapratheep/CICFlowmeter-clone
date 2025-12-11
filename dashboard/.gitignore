@@ -28,4 +28,9 @@ venv/
 */venv/
 
 __pycache__/
-*.pyc
+worker/
+
+
+dashboard/backend/uploads/
+dashboard/data/
+dashboard/worker/__pycache__/
