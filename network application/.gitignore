@@ -47,8 +47,8 @@ offline_data/
 !.env.example
 
 # Models (large files)
-models/*.pkl
-models/*.joblib
+# models/*.pkl
+# models/*.joblib
 
 # Temporary
 tmp/
